@@ -8,7 +8,7 @@ A React Native library for Oppwa, the Open Payment Platform
 
 ### 1. Add Oppwa to your project
 
-- First, set up Oppwa / Crashlytics in your app as instructed on [Oppwa.io](https://oppwa.io).  This includes downloading the oppwa app and walking through the setup steps (downloading the SDK, adding it to your project and making some changes to your project).
+- First, set up Oppwa in your app as instructed on [Oppwa.io](https://oppwa.io).  This includes downloading the oppwa app and walking through the setup steps (downloading the SDK, adding it to your project and making some changes to your project).
 
 ### 2. Add react-native-oppwa
 
@@ -18,7 +18,7 @@ A React Native library for Oppwa, the Open Payment Platform
 
 React Native / rnpm will automatically link all the necessary libraries for both iOS and Android.
 
-If the installation goes off without a hitch, you can now skip to the **[Crashlytics Usage section](#crashlytics-usage)** or the **[Answers Usage section](#answers-usage)**.
+If the installation goes off without a hitch, you can now skip to the **[ Usage section](#usage)** 
 
 #### Manually
 
