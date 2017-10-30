@@ -18,6 +18,14 @@ RCT_EXPORT_MODULE(RNOppwa);
     return @[];
 }
 
+
+/**
+ * updateCheckoutID
+ */
+RCT_EXPORT_METHOD(updateCheckoutID: (NSString *) CheckoutID) {
+    self.checkoutID = CheckoutID;
+}
+
 /**
  * transaction
  */
