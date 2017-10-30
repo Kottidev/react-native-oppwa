@@ -4,8 +4,6 @@ A React Native library for Oppwa, the Open Payment Platform
 [![NPM](https://nodei.co/npm/react-native-oppwa.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/react-native-oppwa/)
 
 
-For Twitter Kit support, see [react-native-oppwa-twitterkit](https://github.com/tkporter/react-native-oppwa-twitterkit)
-
 ## Installation
 
 ### 1. Add Oppwa to your project
@@ -122,17 +120,14 @@ Make sure you also follow the steps described in [`Android`](#android).
   </manifest>
   ```
 
-## Crashlytics Usage
+## Usage
 
-**Note: logging will not be registered on Android to the Oppwa dashboard until the app is bundled for release.**
+**Note: .**
 
-To see all available methods take a look at [Crashlytics.js](https://github.com/corymsmith/react-native-oppwa/blob/master/Crashlytics.js)
-
-```js
 
 
 ## License
-MIT © 2017
+MIT Mohamed Anouar KOTTI © 2017
 
 
 [rnpm]: https://github.com/rnpm/rnpm
