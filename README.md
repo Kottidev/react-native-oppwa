@@ -8,7 +8,7 @@ A React Native library for Oppwa, the Open Payment Platform
 
 ### 1. Add Oppwa to your project
 
-- First, set up Oppwa in your app as instructed on [Oppwa.io](https://oppwa.io).  This includes downloading the oppwa app and walking through the setup steps (downloading the SDK, adding it to your project and making some changes to your project).
+- First, set up Oppwa in your app as instructed on [Oppwa](https://docs.oppwa.com/).  This includes downloading the oppwa app and walking through the setup steps (downloading the SDK, adding it to your project and making some changes to your project).
 
 ### 2. Add react-native-oppwa
 
