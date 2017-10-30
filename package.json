@@ -1,11 +1,11 @@
 {
-  "name": "react-native-fabric",
-  "version": "0.5.1",
-  "description": "A React Native library for Fabric, Crashlytics and Answers",
+  "name": "react-native-oppwa",
+  "version": "0.0.1",
+  "description": "A React Native library for Oppwa",
   "main": "index",
   "rnpm": {
     "android": {
-      "packageInstance": "new FabricPackage()"
+      "packageInstance": "new OppwaPackage()"
     }
   },
   "scripts": {
@@ -19,21 +19,19 @@
     "mobile",
     "ios",
     "android",
-    "crashlytics",
-    "fabric",
-    "answers"
+    "oppwa"
   ],
   "author": {
-    "name": "Cory Smith",
-    "email": "cory.m.smith@gmail.com"
+    "name": "Mohamed Anouar Kotti",
+    "email": "kottianouar@gmail.com"
   },
-  "homepage": "https://github.com/corymsmith/react-native-fabric",
+  "homepage": "https://github.com/kottiDev/react-native-oppwa",
   "bugs": {
-    "url": "https://github.com/corymsmith/react-native-fabric/issues"
+    "url": "https://github.com/kottiDev/react-native-oppwa/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/corymsmith/react-native-fabric.git"
+    "url": "git://github.com/kottiDev/react-native-oppwa.git"
   },
   "license": "MIT"
 }
