@@ -85,12 +85,12 @@ Then do the following:
   }
   ```
 
-* RN < 0.29 - Edit your `MainActivity.java` (deep in `android/app/src/main/java/...`) to look like this (note **two** places to edit):
+*  Edit your `MainActivity.java` (deep in `android/app/src/main/java/...`) to look like this (note **two** places to edit):
 
   ```diff
   package com.myapp;
 
-  + import com.smixx.oppwa.OppwaPackage;
+  + import com.oppwa.OppwaPackage;
 
   ....
   public class MainActivity extends ReactActivity {
@@ -103,101 +103,9 @@ Then do the following:
     }
   }
   ```
-
-* RN 0.29+ - Edit your `MainApplication.java` (deep in `android/app/src/main/java/...`) to look like this (note **two** places to edit):
-
-  ```diff
-  package com.myapp;
-
-  + import com.smixx.oppwa.OppwaPackage;
-
-  ....
-  public class MainApplication extends Application implements ReactApplication {
-    @Override
-    protected List<ReactPackage> getPackages() {
-        return Arrays.<ReactPackage>asList(
-  +         new OppwaPackage(),
-            new MainReactPackage()
-        );
-    }
-  }
-  ```  
-
-<a name="no_android_studio"></a>
-##### Android without Android Studio
 
 Make sure you also follow the steps described in [`Android`](#android).
 
-* Edit your `build.gradle` (note: **app** folder) to look like this:
-
-  ```diff
-  apply plugin: "com.android.application"
-
-  + buildscript {
-  +   repositories {
-  +     maven { url 'https://maven.oppwa.io/public' }
-  +   }
-  +   dependencies {
-  +     // The Oppwa Gradle plugin uses an open ended version to react
-  +     // quickly to Android tooling updates
-  +     classpath 'io.oppwa.tools:gradle:1.+'
-  +   }
-  + }
-  + apply plugin: 'io.oppwa'
-  + repositories {
-  +   maven { url 'https://maven.oppwa.io/public' }
-  + }
-
-  [...]
-
-  dependencies {
-      [...]
-  +     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
-  +         transitive = true;
-  +     }
-  }
-  ```
-
-* RN < 0.29 - Edit your `MainActivity.java` (deep in `android/app/src/main/java/...`) to look like this (note **two** places to edit):
-
-  ```diff
-  + import android.os.Bundle;
-  + import com.crashlytics.android.Crashlytics;
-  + import io.oppwa.sdk.android.Oppwa;
-
-  public class MainActivity extends ReactActivity {
-
-  +   @Override
-  +   protected void onCreate(Bundle savedInstanceState) {
-  +       super.onCreate(savedInstanceState);
-  +       Oppwa.with(this, new Crashlytics());
-  +   }
-
-    [...]
-
-  }
-  ```
-
-* RN 0.29+ - Edit your `MainApplication.java` (deep in `android/app/src/main/java/...`) to look like this (note **two** places to edit):
-
-  ```diff
-  + import com.crashlytics.android.Crashlytics;
-  + import io.oppwa.sdk.android.Oppwa;
-  
-  public class MainApplication extends Application implements ReactApplication {
-  
-  +   @Override
-  +   public void onCreate() {
-  +       super.onCreate();
-  +       Oppwa.with(this, new Crashlytics());
-  +   }
-  
-    [...]
-  
-  }
-  ``` 
-
-* Note: the `onCreate` access privilege goes from `protected` to `public` from RN 0.28+
 
 * Edit your `AndroidManifest.xml` (in `android/app/src/main/`) to look like this. Make sure to enter your oppwa API key after `android:value=`, you can find your key on your oppwa organisation page.
 
@@ -206,10 +114,9 @@ Make sure you also follow the steps described in [`Android`](#android).
       [...]
       <application
         [...]
-  +       <meta-data
-  +         android:name="io.oppwa.ApiKey"
-  +         android:value=[YOUR API KEY]
-  +       />
+  +       <service
+  +      android:name="com.oppwa.mobile.connect.service.ConnectService"
+  +    android:exported="false"/>
       </application>
   +   <uses-permission android:name="android.permission.INTERNET" />
   </manifest>
@@ -222,41 +129,6 @@ Make sure you also follow the steps described in [`Android`](#android).
 To see all available methods take a look at [Crashlytics.js](https://github.com/corymsmith/react-native-oppwa/blob/master/Crashlytics.js)
 
 ```js
-var Oppwa = require('react-native-oppwa');
-
-var { Crashlytics } = Oppwa;
-
-Crashlytics.setUserName('megaman');
-
-Crashlytics.setUserEmail('user@email.com');
-
-Crashlytics.setUserIdentifier('1234');
-
-Crashlytics.setBool('has_posted', true);
-
-Crashlytics.setString('organization', 'Acme. Corp');
-
-// Forces a native crash for testing
-Crashlytics.crash();
-
-// Due to differences in primitive types between iOS and Android I've exposed a setNumber function vs. setInt, setFloat, setDouble, setLong, etc                                        
-Crashlytics.setNumber('post_count', 5);
-
-// Record a non-fatal JS error only on Android
-Crashlytics.logException('');
-
-// Record a non-fatal JS error only on iOS
-Crashlytics.recordError('something went wrong!');
-
-```
-
-## Answers Usage
-To see all available function take a look at [Answers.js](https://github.com/corymsmith/react-native-oppwa/blob/master/Answers.js)
-
-```js
-var Oppwa = require('react-native-oppwa');
-
-``` 
 
 
 ## License
