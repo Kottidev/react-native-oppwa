@@ -1,72 +1,55 @@
 #import "RNOppwa.h"
-#import <OPPWAMobile/OPPWAMobile.h>
 
 @implementation RNOppwa
+
+OPPPaymentProvider *provider;
+
 RCT_EXPORT_MODULE(RNOppwa);
 
-- (id)init {
+
+-(instancetype)init
+{
     self = [super init];
-    self.provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeTest];
-    // self.provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeLive];
-    if (self != nil) {
-        NSLog(@"Setting up RNOppwa instance");
+    if (self) {
+         provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeTest];
     }
+    
     return self;
-}
-
-- (NSArray<NSString *> *)supportedEvents {
-    return @[];
-}
-
-
-/**
- * updateCheckoutID
- */
-RCT_EXPORT_METHOD(updateCheckoutID: (NSString *) CheckoutID) {
-    self.checkoutID = CheckoutID;
 }
 
 /**
  * transaction
  */
-RCT_EXPORT_METHOD(transactionPayment:
-    (NSString *) appName
-            options:
-            (NSDictionary *) options
-            resolver:
-            (RCTPromiseResolveBlock) resolve
-            rejecter:
-            (RCTPromiseRejectBlock) reject) {
+RCT_EXPORT_METHOD(transactionPayment: (NSDictionary*)options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    
+    NSError * _Nullable error;
+   
+    
+    OPPCardPaymentParams *params = [OPPCardPaymentParams cardPaymentParamsWithCheckoutID:[options valueForKey:@"checkoutID"]
 
-    OPPCardPaymentParams *params = [OPPCardPaymentParams cardPaymentParamsWithCheckoutID:self.checkoutID
                                                                         paymentBrand:@"VISA"
                                                                               holder:[options valueForKey:@"holderName"]
                                                                               number:[options valueForKey:@"cardNumber"]
-                                                                         expiryMonth:[options valueForKey:@"month"]
-                                                                          expiryYear:[options valueForKey:@"year"]
+                                                                         expiryMonth:[options valueForKey:@"expiryMonth"]
+                                                                          expiryYear:[options valueForKey:@"expiryYear"]
                                                                                  CVV:[options valueForKey:@"cvv"]
                                                                                error:&error];
 
     if (error) {
-      reject(@"oppwa/card-init", error.localizedDescription, error.code);
+      reject(@"oppwa/card-init",error.description, error);
     } else {
       OPPTransaction *transaction = [OPPTransaction transactionWithPaymentParams:params];
 
-      [self.provider submitTransaction:transaction completionHandler:^(OPPTransaction * _Nonnull transaction, NSError * _Nullable error) {
+      [provider submitTransaction:transaction completionHandler:^(OPPTransaction * _Nonnull transaction, NSError * _Nullable error) {
         if (transaction.type == OPPTransactionTypeAsynchronous) {
           // Open transaction.redirectURL in Safari browser to complete the transaction
         }  else if (transaction.type == OPPTransactionTypeSynchronous) {
          resolve(transaction);
         } else {
-          reject(@"oppwa/transaction", error.localizedDescription, error.code);
+          reject(@"oppwa/transaction",error.description, error);
           // Handle the error
         }
       }];
-      if (error) {
-        reject(@"oppwa/card-init", error.localizedDescription, error.code);
-      } else {
-        resolve([NSNull null]);
-      }
     }
 }
 /**

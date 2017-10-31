@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		6463C8561EBA12CB0095B8CD /* RNOppwa.m in Sources */ = {isa = PBXBuildFile; fileRef = D87A76C21C86A251004ABB23 /* RNOppwa.m */; };
-		B10B2FB71FA726C50043444F /* OPPWAMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10B2FB61FA726C50043444F /* OPPWAMobile.framework */; };
-		B10B2FB91FA726F40043444F /* OPPWAMobile-Resources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B10B2FB51FA726C50043444F /* OPPWAMobile-Resources.bundle */; };
 		D87A76C41C86A251004ABB23 /* RNOppwa.m in Sources */ = {isa = PBXBuildFile; fileRef = D87A76C21C86A251004ABB23 /* RNOppwa.m */; };
 /* End PBXBuildFile section */
 
@@ -36,9 +34,6 @@
 
 /* Begin PBXFileReference section */
 		6463C84C1EBA12A60095B8CD /* libRNOppwa.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNOppwa.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B10B2FB51FA726C50043444F /* OPPWAMobile-Resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = "OPPWAMobile-Resources.bundle"; sourceTree = "<group>"; };
-		B10B2FB61FA726C50043444F /* OPPWAMobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OPPWAMobile.framework; sourceTree = "<group>"; };
-		B10B2FBA1FA727800043444F /* RNOppwaEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNOppwaEvents.h; path = RNOppwa/RNOppwaEvents.h; sourceTree = "<group>"; };
 		D87A76C11C86A251004ABB23 /* RNOppwa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNOppwa.h; path = RNOppwa/RNOppwa.h; sourceTree = "<group>"; };
 		D87A76C21C86A251004ABB23 /* RNOppwa.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNOppwa.m; path = RNOppwa/RNOppwa.m; sourceTree = "<group>"; };
 		D8D9DB831C6D03DB009FBC0E /* libRNOppwa.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNOppwa.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -56,29 +51,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B10B2FB71FA726C50043444F /* OPPWAMobile.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B10B2FB41FA726AE0043444F /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				B10B2FB51FA726C50043444F /* OPPWAMobile-Resources.bundle */,
-				B10B2FB61FA726C50043444F /* OPPWAMobile.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		D8D9DB5B1C6D01F4009FBC0E = {
 			isa = PBXGroup;
 			children = (
-				B10B2FB41FA726AE0043444F /* Frameworks */,
 				D87A76C11C86A251004ABB23 /* RNOppwa.h */,
 				D87A76C21C86A251004ABB23 /* RNOppwa.m */,
-				B10B2FBA1FA727800043444F /* RNOppwaEvents.h */,
 				D8D9DB661C6D01F4009FBC0E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -171,7 +154,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B10B2FB91FA726F40043444F /* OPPWAMobile-Resources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
