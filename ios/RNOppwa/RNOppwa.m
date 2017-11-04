@@ -27,7 +27,7 @@ RCT_EXPORT_METHOD(transactionPayment: (NSDictionary*)options resolver:(RCTPromis
     
     OPPCardPaymentParams *params = [OPPCardPaymentParams cardPaymentParamsWithCheckoutID:[options valueForKey:@"checkoutID"]
 
-                                                                        paymentBrand:@"VISA"
+                                                                        paymentBrand:[options valueForKey:@"paymentBrand"]
                                                                               holder:[options valueForKey:@"holderName"]
                                                                               number:[options valueForKey:@"cardNumber"]
                                                                          expiryMonth:[options valueForKey:@"expiryMonth"]
@@ -65,7 +65,7 @@ RCT_EXPORT_METHOD(isValidNumber:
             (RCTPromiseRejectBlock) reject) {
 
         
-        if (![OPPCardPaymentParams isNumberValid:[options valueForKey:@"cardNumber"] forPaymentBrand:@"VISA"]) {
+        if (![OPPCardPaymentParams isNumberValid:[options valueForKey:@"cardNumber"] forPaymentBrand:[options valueForKey:@"paymentBrand"]]) {
             resolve([NSNull null]);
         }
         else {
