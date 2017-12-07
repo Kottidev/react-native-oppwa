@@ -14,7 +14,7 @@ RCT_EXPORT_MODULE(RNOppwa);
       #ifdef DEBUG
         provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeTest];
      #else
-        provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeLive];·
+        provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeLive];
      #endif
     }
     
