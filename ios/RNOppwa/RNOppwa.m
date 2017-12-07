@@ -11,7 +11,11 @@ RCT_EXPORT_MODULE(RNOppwa);
 {
     self = [super init];
     if (self) {
-         provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeTest];
+      #ifdef DEBUG
+        provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeTest];
+     #else
+        provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeLive];·
+     #endif
     }
     
     return self;
@@ -27,7 +31,7 @@ RCT_EXPORT_METHOD(transactionPayment: (NSDictionary*)options resolver:(RCTPromis
     
     OPPCardPaymentParams *params = [OPPCardPaymentParams cardPaymentParamsWithCheckoutID:[options valueForKey:@"checkoutID"]
 
-                                                                        paymentBrand:[options valueForKey:@"paymentBrand"]
+                                                                        paymentBrand:@"VISA"
                                                                               holder:[options valueForKey:@"holderName"]
                                                                               number:[options valueForKey:@"cardNumber"]
                                                                          expiryMonth:[options valueForKey:@"expiryMonth"]
@@ -38,6 +42,7 @@ RCT_EXPORT_METHOD(transactionPayment: (NSDictionary*)options resolver:(RCTPromis
     if (error) {
       reject(@"oppwa/card-init",error.description, error);
     } else {
+      params.tokenizationEnabled = YES;
       OPPTransaction *transaction = [OPPTransaction transactionWithPaymentParams:params];
 
       [provider submitTransaction:transaction completionHandler:^(OPPTransaction * _Nonnull transaction, NSError * _Nullable error) {
@@ -65,7 +70,7 @@ RCT_EXPORT_METHOD(isValidNumber:
             (RCTPromiseRejectBlock) reject) {
 
         
-        if (![OPPCardPaymentParams isNumberValid:[options valueForKey:@"cardNumber"] forPaymentBrand:[options valueForKey:@"paymentBrand"]]) {
+        if (![OPPCardPaymentParams isNumberValid:[options valueForKey:@"cardNumber"] forPaymentBrand:@"VISA"]) {
             resolve([NSNull null]);
         }
         else {
