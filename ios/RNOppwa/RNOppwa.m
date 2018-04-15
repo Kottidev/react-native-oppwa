@@ -30,14 +30,7 @@ RCT_EXPORT_METHOD(transactionPayment: (NSDictionary*)options resolver:(RCTPromis
    
     
     OPPCardPaymentParams *params = [OPPCardPaymentParams cardPaymentParamsWithCheckoutID:[options valueForKey:@"checkoutID"]
-
-                                                                        paymentBrand:[options valueForKey:@"paymentBrand"]
-                                                                              holder:[options valueForKey:@"holderName"]
-                                                                              number:[options valueForKey:@"cardNumber"]
-                                                                         expiryMonth:[options valueForKey:@"expiryMonth"]
-                                                                          expiryYear:[options valueForKey:@"expiryYear"]
-                                                                                 CVV:[options valueForKey:@"cvv"]
-                                                                               error:&error];
+                                                     error:&error];
 
     if (error) {
       reject(@"oppwa/card-init",error.description, error);
