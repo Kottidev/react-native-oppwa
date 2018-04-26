@@ -84,8 +84,6 @@ public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransa
 
   @ReactMethod
   public void transactionPayment(ReadableMap options, Promise promise) {
-    // promiseModule = promise;
-
     try {
 
       boolean isTokenizationEnabled = true;
