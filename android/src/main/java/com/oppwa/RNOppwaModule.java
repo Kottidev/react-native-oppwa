@@ -38,7 +38,7 @@ public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransa
   private IProviderBinder binder;
   private Context mApplicationContext;
   private Intent bindIntent;
-  private Promise promiseModule;
+  // private Promise promiseModule;
 
   private ServiceConnection serviceConnection = new ServiceConnection() {
     @Override
@@ -60,17 +60,14 @@ public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransa
 
   public RNOppwaModule(ReactApplicationContext reactContext) {
     super(reactContext);
-    this.mApplicationContext = reactContext.getApplicationContext();
+    mApplicationContext = reactContext.getApplicationContext();
+    Intent intent = new Intent(mApplicationContext, ConnectService.class);
 
-    bindIntent = new Intent(reactContext, ConnectService.class);
-    reactContext.startService(bindIntent);
-    reactContext.bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+    mApplicationContext.startService(intent);
+    mApplicationContext.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
   }
 
-  public Context getApplicationContext() {
-    return mApplicationContext;
-  }
 
   public void unBindService() {
     if (serviceConnection != null) {
@@ -87,44 +84,62 @@ public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransa
 
   @ReactMethod
   public void transactionPayment(ReadableMap options, Promise promise) {
-    promiseModule = promise;
+    // promiseModule = promise;
+
     try {
 
+      boolean isTokenizationEnabled = true;
       CardPaymentParams cardPaymentParams = new CardPaymentParams(options.getString("checkoutID"),
           options.getString("paymentBrand"), options.getString("cardNumber"), options.getString("holderName"),
           options.getString("expiryMonth"), options.getString("expiryYear"), options.getString("cvv"));
+
       if (!CardPaymentParams.isNumberValid(options.getString("cardNumber"), options.getString("paymentBrand"))) {
         promise.reject("oppwa/card-invalid", "The card number is invalid.");
       }
 
       cardPaymentParams.setTokenizationEnabled(true);
 
-      Transaction transaction = new Transaction(cardPaymentParams);
+      Transaction transaction = null;
 
-      binder.submitTransaction(transaction);
-      binder.addTransactionListener(RNOppwaModule.this);
-      promise.resolve(null);
+      try {
 
+        transaction = new Transaction(cardPaymentParams);
+
+        binder.submitTransaction(transaction);
+        binder.addTransactionListener(RNOppwaModule.this);
+        promise.resolve(null);
+      } catch (PaymentException ee) {
+        promise.reject(null, ee.getMessage());
+      }
     } catch (PaymentException e) {
       promise.reject(null, e.getMessage());
     }
 
   }
 
+  @Override
   public void paymentConfigRequestSucceeded(CheckoutInfo checkoutInfo) {
+    Log.i("W99l-payment-hyperpsy", "RequestSucceeded " + checkoutInfo.getCurrencyCode());
 
   }
 
+  @Override
   public void paymentConfigRequestFailed(PaymentError paymentError) {
-    promiseModule.reject("oppwa/transaction", paymentError.getErrorMessage());
+    Log.i("W99l-payment-hyperpsy",
+        "RequestFailed " + paymentError.getErrorInfo() + " : " + paymentError.getErrorMessage());
   }
 
+  @Override
   public void transactionCompleted(Transaction transaction) {
+    // shoud add listner 
 
-    promiseModule.resolve(transaction);
+    // promiseModule.resolve(transaction);
+
   }
 
+  @Override
   public void transactionFailed(Transaction transaction, PaymentError paymentError) {
-    promiseModule.reject("oppwa/transaction", paymentError.getErrorMessage());
+    Log.i("W99l-payment-hyperpsy",
+        "transactionFailed " + paymentError.getErrorMessage() + " : " + paymentError.getErrorInfo());
   }
 }
