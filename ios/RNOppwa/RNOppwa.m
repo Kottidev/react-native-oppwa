@@ -12,7 +12,7 @@ RCT_EXPORT_MODULE(RNOppwa);
     self = [super init];
     if (self) {
       #ifdef DEBUG
-        provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeTest];
+        provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeLive];
      #else
         provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeLive];
      #endif
@@ -30,10 +30,17 @@ RCT_EXPORT_METHOD(transactionPayment: (NSDictionary*)options resolver:(RCTPromis
    
     
     OPPCardPaymentParams *params = [OPPCardPaymentParams cardPaymentParamsWithCheckoutID:[options valueForKey:@"checkoutID"]
-                                                     error:&error];
+
+                                                                        paymentBrand:[options valueForKey:@"paymentBrand"]
+                                                                              holder:[options valueForKey:@"holderName"]
+                                                                              number:[options valueForKey:@"cardNumber"]
+                                                                         expiryMonth:[options valueForKey:@"expiryMonth"]
+                                                                          expiryYear:[options valueForKey:@"expiryYear"]
+                                                                                 CVV:[options valueForKey:@"cvv"]
+                                                                               error:&error];
 
     if (error) {
-      reject(@"oppwa/card-init",error.description, error);
+      reject(@"oppwa/card-init",error.localizedDescription, error);
     } else {
       params.tokenizationEnabled = YES;
       OPPTransaction *transaction = [OPPTransaction transactionWithPaymentParams:params];
@@ -44,7 +51,7 @@ RCT_EXPORT_METHOD(transactionPayment: (NSDictionary*)options resolver:(RCTPromis
         }  else if (transaction.type == OPPTransactionTypeSynchronous) {
          resolve(transaction);
         } else {
-          reject(@"oppwa/transaction",error.description, error);
+          reject(@"oppwa/transaction",error.localizedDescription, error);
           // Handle the error
         }
       }];
@@ -55,15 +62,10 @@ RCT_EXPORT_METHOD(transactionPayment: (NSDictionary*)options resolver:(RCTPromis
  * @return
  */
 RCT_EXPORT_METHOD(isValidNumber:
-            options:
-            (NSDictionary *) options
-            resolver:
-            (RCTPromiseResolveBlock) resolve
-            rejecter:
-            (RCTPromiseRejectBlock) reject) {
+            (NSDictionary*)options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
 
         
-        if (![OPPCardPaymentParams isNumberValid:[options valueForKey:@"cardNumber"] forPaymentBrand:@"VISA"]) {
+        if ([OPPCardPaymentParams isNumberValid:[options valueForKey:@"cardNumber"] forPaymentBrand:[options valueForKey:@"paymentBrand"]]) {
             resolve([NSNull null]);
         }
         else {

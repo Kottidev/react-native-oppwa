@@ -31,6 +31,8 @@ import com.oppwa.mobile.connect.provider.Transaction;
 import com.oppwa.mobile.connect.service.IProviderBinder;
 import com.oppwa.mobile.connect.service.ConnectService;
 
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+
 import javax.annotation.Nullable;
 
 public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransactionListener {
@@ -68,11 +70,11 @@ public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransa
 
   }
 
-
   public void unBindService() {
     if (serviceConnection != null) {
       // Unbind from the In-app Billing service when we are done
-      // Otherwise, the open service connection could cause the device’s performance to degrade
+      // Otherwise, the open service connection could cause the device’s performance
+      // to degrade
       mApplicationContext.unbindService(serviceConnection);
     }
   }
@@ -82,8 +84,21 @@ public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransa
     return "RNOppwa";
   }
 
+  @ReactMethod 
+  public void isValidNumber(ReadableMap options, Promise promise) {
+    if (!CardPaymentParams.isNumberValid(options.getString("cardNumber"), options.getString("paymentBrand"))) {
+      promise.reject("oppwa/card-invalid", "The card number is invalid.");
+    } else {
+      promise.resolve(null);
+    }
+
+    
+  }
+
   @ReactMethod
   public void transactionPayment(ReadableMap options, Promise promise) {
+    // promiseModule = promise;
+
     try {
 
       boolean isTokenizationEnabled = true;
@@ -91,12 +106,7 @@ public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransa
           options.getString("paymentBrand"), options.getString("cardNumber"), options.getString("holderName"),
           options.getString("expiryMonth"), options.getString("expiryYear"), options.getString("cvv"));
 
-      if (!CardPaymentParams.isNumberValid(options.getString("cardNumber"), options.getString("paymentBrand"))) {
-        promise.reject("oppwa/card-invalid", "The card number is invalid.");
-      }
-
       cardPaymentParams.setTokenizationEnabled(true);
-
       Transaction transaction = null;
 
       try {
@@ -117,19 +127,25 @@ public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransa
 
   @Override
   public void paymentConfigRequestSucceeded(CheckoutInfo checkoutInfo) {
-    Log.i("W99l-payment-hyperpsy", "RequestSucceeded " + checkoutInfo.getCurrencyCode());
+    Log.i("payment-hyperpsy", "RequestSucceeded " + checkoutInfo.getCurrencyCode());
 
   }
 
   @Override
   public void paymentConfigRequestFailed(PaymentError paymentError) {
-    Log.i("W99l-payment-hyperpsy",
-        "RequestFailed " + paymentError.getErrorInfo() + " : " + paymentError.getErrorMessage());
+
+    Log.i("payment-hyperpsy", "RequestFailed " + paymentError.getErrorInfo() + " : " + paymentError.getErrorMessage());
   }
 
   @Override
   public void transactionCompleted(Transaction transaction) {
-    // shoud add listner 
+    // shoud add listner
+    WritableMap data = Arguments.createMap();
+    data.putString("status", "transactionCompleted");
+    data.putString("checkoutID", transaction.getPaymentParams().getCheckoutId());
+
+    getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+        .emit("transactionStatus", data);
 
     // promiseModule.resolve(transaction);
 
@@ -137,7 +153,15 @@ public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransa
 
   @Override
   public void transactionFailed(Transaction transaction, PaymentError paymentError) {
-    Log.i("W99l-payment-hyperpsy",
+
+    WritableMap data = Arguments.createMap();
+
+    data.putString("status", "transactionFailed");
+    data.putString("checkoutID", transaction.getPaymentParams().getCheckoutId());
+
+    getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+        .emit("transactionStatus", data);
+    Log.i("payment-hyperpsy",
         "transactionFailed " + paymentError.getErrorMessage() + " : " + paymentError.getErrorInfo());
   }
 }
