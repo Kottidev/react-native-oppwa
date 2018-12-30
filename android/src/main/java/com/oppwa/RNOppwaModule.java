@@ -23,11 +23,14 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.oppwa.mobile.connect.exception.PaymentError;
 import com.oppwa.mobile.connect.exception.PaymentException;
+import com.oppwa.mobile.connect.payment.BrandsValidation;
 import com.oppwa.mobile.connect.payment.CheckoutInfo;
+import com.oppwa.mobile.connect.payment.ImagesRequest;
 import com.oppwa.mobile.connect.payment.card.CardPaymentParams;
 import com.oppwa.mobile.connect.provider.Connect;
 import com.oppwa.mobile.connect.provider.ITransactionListener;
 import com.oppwa.mobile.connect.provider.Transaction;
+import com.oppwa.mobile.connect.provider.TransactionType;
 import com.oppwa.mobile.connect.service.IProviderBinder;
 import com.oppwa.mobile.connect.service.ConnectService;
 
@@ -48,7 +51,7 @@ public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransa
       binder = (IProviderBinder) service;
       /* we have a connection to the service */
       try {
-        binder.initializeProvider(Connect.ProviderMode.LIVE);
+        binder.initializeProvider(Connect.ProviderMode.TEST);
       } catch (PaymentException ee) {
         /* error occurred */
       }
@@ -115,7 +118,10 @@ public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransa
 
         binder.submitTransaction(transaction);
         binder.addTransactionListener(RNOppwaModule.this);
-        promise.resolve(null);
+        WritableMap data = Arguments.createMap();
+        data.putString("OS", "android");
+  
+        promise.resolve(data);
       } catch (PaymentException ee) {
         promise.reject(null, ee.getMessage());
       }
@@ -144,6 +150,13 @@ public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransa
     data.putString("status", "transactionCompleted");
     data.putString("checkoutID", transaction.getPaymentParams().getCheckoutId());
 
+    if (transaction.getTransactionType() == TransactionType.SYNC) {
+      data.putString("type","synchronous");
+    }else {
+      data.putString("type","asynchronous");
+      data.putString("RedirectUrl",transaction.getRedirectUrl());
+    }
+
     getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
         .emit("transactionStatus", data);
 
@@ -164,4 +177,17 @@ public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransa
     Log.i("payment-hyperpsy",
         "transactionFailed " + paymentError.getErrorMessage() + " : " + paymentError.getErrorInfo());
   }
+
+  @Override
+  public void brandsValidationRequestSucceeded(BrandsValidation var1){}
+
+  @Override
+  public void brandsValidationRequestFailed(PaymentError var1){}
+
+  @Override
+  public void imagesRequestSucceeded(ImagesRequest var1){}
+
+  @Override
+  public void imagesRequestFailed(){}
+
 }
