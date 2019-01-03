@@ -32,5 +32,5 @@ dependencies {
     compile "com.android.support:appcompat-v7:$supportVersion"
     compile "com.facebook.react:react-native:+"  // From node_modules
     compile "com.android.support:design:$supportVersion"
-    compile project(':oppwa.mobile-2.2.0')
+    compile project(':oppwa.mobile-2.30.0')
 }
