@@ -12,9 +12,9 @@ RCT_EXPORT_MODULE(RNOppwa);
     self = [super init];
     if (self) {
       #ifdef DEBUG
-        provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeLive];
+        provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeTest];
      #else
-        provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeLive];
+        provider = [OPPPaymentProvider paymentProviderWithMode:OPPProviderModeTest];
      #endif
     }
     
@@ -28,7 +28,7 @@ RCT_EXPORT_METHOD(transactionPayment: (NSDictionary*)options resolver:(RCTPromis
     
     NSError * _Nullable error;
    
-    
+    NSMutableDictionary *result = [[NSMutableDictionary alloc]initWithCapacity:10];
     OPPCardPaymentParams *params = [OPPCardPaymentParams cardPaymentParamsWithCheckoutID:[options valueForKey:@"checkoutID"]
 
                                                                         paymentBrand:[options valueForKey:@"paymentBrand"]
@@ -48,10 +48,14 @@ RCT_EXPORT_METHOD(transactionPayment: (NSDictionary*)options resolver:(RCTPromis
       [provider submitTransaction:transaction completionHandler:^(OPPTransaction * _Nonnull transaction, NSError * _Nullable error) {
         if (transaction.type == OPPTransactionTypeAsynchronous) {
           // Open transaction.redirectURL in Safari browser to complete the transaction
+            [result setObject:[NSString stringWithFormat:@"asynchronous"] forKey:@"type"];
+            [result setObject:[NSString stringWithFormat:@"%@",transaction.redirectURL] forKey:@"redirectURL"];
+            resolve(result);
         }  else if (transaction.type == OPPTransactionTypeSynchronous) {
-         resolve(transaction);
+            [result setObject:[NSString stringWithFormat:@"synchronous"] forKey:@"type"];
+            resolve(result);
         } else {
-          reject(@"oppwa/transaction",error.localizedDescription, error);
+          reject(@"oppwa/transaction",error.localizedDescription, error);  
           // Handle the error
         }
       }];
