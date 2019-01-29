@@ -51,7 +51,7 @@ public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransa
       binder = (IProviderBinder) service;
       /* we have a connection to the service */
       try {
-        binder.initializeProvider(Connect.ProviderMode.TEST);
+        binder.initializeProvider(Connect.ProviderMode.LIVE);
       } catch (PaymentException ee) {
         /* error occurred */
       }
