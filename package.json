@@ -1,7 +1,7 @@
 {
   "name": "react-native-oppwa",
-  "version": "0.0.1",
-  "description": "A React Native library for Oppwa",
+  "version": "1.0.0",
+  "description": "A React Native library for Oppwa | Hyper pay payment",
   "main": "index",
   "rnpm": {
     "android": {
