@@ -154,7 +154,7 @@ public class RNOppwaModule extends ReactContextBaseJavaModule implements ITransa
       data.putString("type","synchronous");
     }else {
       data.putString("type","asynchronous");
-      data.putString("redirectUrl",transaction.getRedirectUrl());
+      data.putString("redirectURL",transaction.getRedirectUrl());
     }
 
     getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
